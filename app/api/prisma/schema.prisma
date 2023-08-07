@@ -20,3 +20,15 @@ model User {
 
   @@map("users")
 }
+
+model Movie {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  imageUrl     String
+  description  String
+  releasedYear Int
+  rating       Decimal  @db.Decimal(2, 1)
+  title        String
+
+  @@map("movies")
+}

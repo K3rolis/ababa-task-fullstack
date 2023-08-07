@@ -1,0 +1,36 @@
+.submitButton {
+  background-color: #9fd3c7;
+  padding: 15px 20px;
+  border-radius: 8px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.submitButton:hover {
+  filter: brightness(110%);
+  cursor: pointer;
+}
+
+.linkButton {
+  background-color: transparent;
+  outline: none;
+  font-size: 18px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.outline {
+  border: 1px solid black;
+}
+
+.link {
+  text-decoration: underline;
+}
+
+.linkButton:focus {
+  outline: none;
+}

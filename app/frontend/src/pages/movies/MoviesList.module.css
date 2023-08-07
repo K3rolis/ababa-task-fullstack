@@ -1,0 +1,36 @@
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.moviesWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.hidden {
+  margin-right: auto;
+  visibility: hidden;
+  width: 50px;
+}
+
+.button {
+  margin-left: auto;
+  margin-bottom: 15px;
+  border: 1px solid black;
+}
+
+.button:hover {
+  background-color: var(--primary-decoration-color);
+}
+
+.sortingBox {
+  font-size: 18px;
+}
+
+.icon {
+  margin-left: 10px;
+  cursor: pointer;
+}

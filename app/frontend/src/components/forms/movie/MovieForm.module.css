@@ -1,0 +1,20 @@
+.formGroup {
+  display: flex;
+  gap: 20px;
+  margin-block: 10px;
+}
+
+.formGroup > * {
+  width: 50%;
+  margin: 0;
+}
+
+@media screen and (max-width: 500px) {
+  .formGroup {
+    flex-direction: column;
+  }
+  .formGroup > * {
+    width: 100%;
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,144 @@
+.background {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+}
+
+.username {
+  font-size: 20px;
+  color: var(--primary-text-color);
+}
+
+.navbar {
+  display: flex;
+
+  justify-content: space-between;
+  gap: 20px;
+  /* background-color: red; */
+  padding: 20px 10px;
+  font-size: 24px;
+}
+
+.navbarGap {
+  display: flex;
+  column-gap: 10px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* SEARCH */
+
+.searchContent {
+  padding-left: 90px;
+  height: 100%;
+  display: flex;
+}
+
+.searchInput {
+  width: 100%;
+  height: 100%;
+  padding: 5px 10px;
+  font-size: 16px;
+  border: 1px solid var(--primary-text-color);
+  outline: none;
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+}
+
+.searchButton {
+  width: 35px;
+  background-color: var(--primary-decoration-color);
+  border: 1px solid black;
+  margin-left: -1px;
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+  cursor: pointer;
+}
+
+.searchIcon {
+  height: 100%;
+  font-size: 18px;
+}
+
+/* Hamburger */
+
+.hamburgerMenu {
+  display: none;
+}
+
+@media screen and (max-width: 650px) {
+  .searchContent {
+    padding-left: 0px;
+  }
+
+  .navbar {
+    gap: 5px;
+  }
+
+  .auth {
+    display: none;
+  }
+  .hamburgerMenu {
+    display: flex;
+    text-align: right;
+    display: block;
+  }
+
+  .hamburger {
+    font-size: 24px;
+    height: 24px;
+    width: 24px;
+    color: black;
+    cursor: pointer;
+  }
+  .hamburgerClose {
+    display: flex;
+    justify-content: flex-end;
+    /* margin-left: auto; */
+    margin-top: 20px;
+    margin-right: 20px;
+  }
+
+  .responsiveNavigation {
+    position: fixed;
+    top: -20px;
+    width: 300px;
+    height: 100%;
+    margin: 0;
+    margin-top: 20px;
+    background-color: rgba(245, 245, 245, 0.85);
+    right: 0;
+    transform: translateX(0%);
+    font-size: 26px;
+  }
+
+  .responsiveNavigation ul {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    justify-content: center;
+    margin-top: 70px;
+  }
+
+  .responsiveNavigation ul li {
+    /* width: 100%; */
+    display: flex;
+    justify-content: center;
+  }
+
+  .responsiveNavigation ul li a {
+    position: relative;
+  }
+
+  .responsiveNavigation ul li a:hover::after {
+    position: absolute;
+    content: '';
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--primary-decoration-color);
+    transition: 0.9s;
+  }
+}
