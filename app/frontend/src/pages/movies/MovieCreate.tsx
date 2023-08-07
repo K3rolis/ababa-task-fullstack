@@ -1,4 +1,3 @@
-import React from 'react';
 import MovieForm from '../../components/forms/movie/MovieForm';
 import { useMutation } from '@tanstack/react-query';
 import { createMovie } from '../../api/movies';
@@ -20,9 +19,12 @@ const MovieCreate = () => {
     },
   });
   const handleSubmit = (movie: MovieProps) => {
+    console.log(movie);
+    movie.userId = 1;
     createMovieMutation.mutate({
       ...movie,
     });
+    console.log(movie);
   };
   return <MovieForm onSubmit={handleSubmit} initialValues={{} as MovieProps}></MovieForm>;
 };

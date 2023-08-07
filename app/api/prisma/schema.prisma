@@ -17,6 +17,7 @@ model User {
   email     String   @unique
   password  String
   hashedRt  String?
+  Movie     Movie[]
 
   @@map("users")
 }
@@ -29,6 +30,8 @@ model Movie {
   releasedYear Int
   rating       Decimal  @db.Decimal(2, 1)
   title        String
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id])
 
   @@map("movies")
 }

@@ -30,7 +30,7 @@ const MovieCard = ({ handleDelete, props }: Props) => {
           <p className={styles.description}>{props.description}</p>
         </div>
       </div>
-      {auth.isLoggedIn && (
+      {!auth.isLoggedIn && (
         <div className={styles.actions}>
           <Link to={`/movies/edit/${props.id}`} title="Edit">
             <AiFillEdit className={styles.icon} />

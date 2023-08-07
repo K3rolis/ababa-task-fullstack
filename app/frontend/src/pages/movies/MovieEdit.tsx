@@ -11,7 +11,11 @@ const MovieEdit = () => {
   const { movieId } = useParams();
   const navigate = useNavigate();
 
-  const { isLoading, data: movie } = useQuery({
+  const {
+    refetch,
+    isLoading,
+    data: movie,
+  } = useQuery({
     queryKey: ['recipe', Number(movieId)],
     queryFn: () => getMovie(Number(movieId)),
   });
@@ -19,6 +23,7 @@ const MovieEdit = () => {
   const updateMovieMutation = useMutation({
     mutationFn: updateMovie,
     onSuccess: () => {
+      refetch();
       toast.success('Movie was edited Successfully!');
       navigate('/');
     },

@@ -16,5 +16,5 @@ export const movieSchema = yup.object().shape({
     .min(1888, 'Must be greater than 1888')
     .max(nextYear, `Are you from future? Must be less or equal to ${nextYear} `),
   description: yup.string().required('This field is required').min(10, 'Must be atleast 10 characters').trim(),
-  imageUrl: yup.string().required('This field is required'),
+  imageUrl: yup.string().url().required('This field is required'),
 });

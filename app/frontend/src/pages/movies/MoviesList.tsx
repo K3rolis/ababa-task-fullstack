@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import styles from './MoviesList.module.css';
 import classes from '../../components/buttons/Buttons.module.css';
 import Container from '../../components/container/Container';
-import { deleteMovie, getMoviesAsc } from '../../api/movies';
+import { deleteMovie, getMovies } from '../../api/movies';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { MovieProps } from '../../props/MoviesProps';
 import MovieCard from '../../components/movieCard/MovieCard';
@@ -25,7 +25,7 @@ const MoviesList = () => {
     data: movies,
   } = useQuery({
     queryKey: ['movies'],
-    queryFn: getMoviesAsc,
+    queryFn: getMovies,
   });
 
   const deleteMovieMutation = useMutation({
@@ -41,7 +41,7 @@ const MoviesList = () => {
   });
 
   const handleDelete = (id: number) => {
-    if (auth.isLoggedIn) {
+    if (!auth.isLoggedIn) {
       deleteMovieMutation.mutate(id);
     } else {
       navigate('/*');
@@ -50,7 +50,9 @@ const MoviesList = () => {
 
   if (isLoading) return <FadeLoader className="spinner" color="#36d7b7" />;
 
-  const moviesSorted = movies.toReversed();
+  console.log(movies);
+
+  // const moviesSorted = movies.toReversed();
 
   return (
     <Container width="800px">
@@ -75,7 +77,7 @@ const MoviesList = () => {
       </div>
       <div className={styles.moviesWrapper}>
         {movies.length ? (
-          (moviesDesc ? moviesSorted : movies).map((movie: MovieProps) => <MovieCard key={movie.id} props={{ ...movie }} handleDelete={handleDelete} />)
+          movies.map((movie: MovieProps) => <MovieCard key={movie.id} props={{ ...movie }} handleDelete={handleDelete} />)
         ) : (
           <Title>Results not found</Title>
         )}
