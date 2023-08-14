@@ -4,27 +4,33 @@ import { AuthDto } from './dtos';
 import * as bcrypt from 'bcrypt';
 import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
+import { RegisterUserDto } from './dtos/registerUser.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private prisma: PrismaService, private jwtService: JwtService) {}
 
-  async signup(dto: AuthDto): Promise<Tokens> {
+  async signup(dto: RegisterUserDto): Promise<Tokens> {
     const hashedPassword = await this.hashData(dto.password);
 
     const newUser = await this.prisma.user.create({
       data: {
+        username: dto.username,
         email: dto.email,
         password: hashedPassword,
       },
     });
 
-    const tokens = await this.getTokens(newUser.id, newUser.email);
+    const tokens = await this.getTokens(
+      newUser.id,
+      newUser.email,
+      newUser.username,
+    );
     await this.updateRtHash(newUser.id, tokens.refresh_token);
     return tokens;
   }
 
-  async signin(dto: AuthDto): Promise<Tokens> {
+  async signin(dto: AuthDto, res: any): Promise<Tokens> {
     const user = await this.prisma.user.findFirst({
       where: {
         email: dto.email,
@@ -36,12 +42,18 @@ export class AuthService {
     const passwordMatches = await bcrypt.compare(dto.password, user.password);
     if (!passwordMatches) throw new ForbiddenException('Access Denied');
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user.id, user.email, user.username);
     await this.updateRtHash(user.id, tokens.refresh_token);
+
+    res.cookie('token', tokens.access_token);
+    res.cookie('user_token', tokens.refresh_token);
     return tokens;
   }
 
-  async logout(userId: number) {
+  async logout(userId: number, res: any) {
+    res.clearCookie('user_token');
+    res.clearCookie('token');
+
     await this.prisma.user.updateMany({
       where: {
         id: userId,
@@ -63,15 +75,13 @@ export class AuthService {
       },
     });
 
-    console.log(user);
-
     if (!user || !user.hashedRt) throw new ForbiddenException('Access Denied');
 
     const rtMatches = await bcrypt.compare(rt, user.hashedRt);
 
     if (!rtMatches) throw new ForbiddenException('Access Denied');
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user.id, user.email, user.username);
     await this.updateRtHash(user.id, tokens.refresh_token);
     return tokens;
   }
@@ -80,7 +90,11 @@ export class AuthService {
     return bcrypt.hash(data, 10);
   }
 
-  async getTokens(userId: number, email: string): Promise<Tokens> {
+  async getTokens(
+    userId: number,
+    email: string,
+    username: string,
+  ): Promise<Tokens> {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
         {
@@ -89,13 +103,14 @@ export class AuthService {
         },
         {
           secret: process.env.AT_TOKEN,
-          expiresIn: 60 * 15,
+          expiresIn: 60 * 20,
         },
       ),
       this.jwtService.signAsync(
         {
           sub: userId,
           email,
+          username,
         },
         {
           secret: process.env.RT_TOKEN,

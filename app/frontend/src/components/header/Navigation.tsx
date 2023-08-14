@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { LoginContext } from '../../contexts/LoginContext';
 import styles from './Navigation.module.css';
@@ -6,8 +6,9 @@ import Container from '../container/Container';
 import { LinkButton } from '../buttons/Buttons';
 import classes from '../buttons/Buttons.module.css';
 import { AiOutlineSearch } from 'react-icons/ai';
-import { GiHamburgerMenu } from 'react-icons/gi';
+import { RxHamburgerMenu } from 'react-icons/rx';
 import { VscChromeClose } from 'react-icons/vsc';
+import { logout } from '../../api/user';
 
 const Navigation = () => {
   const { auth, setAuth } = useContext(LoginContext);
@@ -16,17 +17,14 @@ const Navigation = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleLogout = () => {
-    setAuth({
-      username: '',
-      isLoggedIn: false,
-    });
-    navigate('/');
+    logout();
+    setAuth({ username: null, isLoggedIn: false });
   };
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (search) {
-      navigate(`/movies/search/${search}`);
+      navigate(`/movies/search?title=${search.replace(/\s+/g, ' ')}`);
     }
   };
 
@@ -40,7 +38,7 @@ const Navigation = () => {
           <div className={styles.navbarGap}>
             <form onSubmit={handleSubmit} className={styles.searchBox}>
               <div className={styles.searchContent}>
-                <input type="search" placeholder="search..." onChange={(e) => setSearch(e.target.value)} className={styles.searchInput} />
+                <input type="search" placeholder="search..." onChange={(e) => setSearch(e.target.value.trim())} className={styles.searchInput} />
                 <button className={styles.searchButton}>
                   <AiOutlineSearch className={styles.searchIcon} />
                 </button>
@@ -69,7 +67,7 @@ const Navigation = () => {
           </div>
 
           <div className={`${styles.hamburgerMenu} ${styles.hamburgerMenuActive}`} onClick={() => setIsOpen(!isOpen)}>
-            <GiHamburgerMenu className={styles.hamburger} />
+            <RxHamburgerMenu className={styles.hamburger} />
 
             {isOpen && (
               <div className={`${styles.responsiveNavigation}`}>

@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -11,6 +12,7 @@ import { AuthDto } from './dtos';
 import { Tokens } from './types';
 import { RtGuard } from './common/guards';
 import { GetCurrentUser, GetCurrentUserId, Public } from './common/decorators';
+import { RegisterUserDto } from './dtos/registerUser.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,21 +21,28 @@ export class AuthController {
   @Public()
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
-  signup(@Body() dto: AuthDto): Promise<Tokens> {
+  signup(@Body() dto: RegisterUserDto): Promise<Tokens> {
+    console.log(dto);
     return this.authService.signup(dto);
   }
 
   @Public()
   @Post('signin')
   @HttpCode(HttpStatus.OK)
-  signin(@Body() dto: AuthDto): Promise<Tokens> {
-    return this.authService.signin(dto);
+  signin(
+    @Res({ passthrough: true }) res: Response,
+    @Body() dto: AuthDto,
+  ): Promise<Tokens> {
+    return this.authService.signin(dto, res);
   }
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@GetCurrentUserId() userId: number): Promise<boolean> {
-    return this.authService.logout(userId);
+  logout(
+    @GetCurrentUserId() userId: number,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<boolean> {
+    return this.authService.logout(userId, res);
   }
 
   @Public()

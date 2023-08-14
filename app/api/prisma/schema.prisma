@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -15,6 +16,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   email     String   @unique
+  username  String
   password  String
   hashedRt  String?
   Movie     Movie[]
@@ -28,8 +30,8 @@ model Movie {
   imageUrl     String
   description  String
   releasedYear Int
-  rating       Decimal  @db.Decimal(2, 1)
-  title        String
+  rating       Decimal  @db.Decimal(4, 2)
+  title        String   @db.Text
   userId       Int
   user         User     @relation(fields: [userId], references: [id])
 

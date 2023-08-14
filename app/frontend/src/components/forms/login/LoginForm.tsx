@@ -14,18 +14,22 @@ type Props = {
   onSubmit: (user: LoginProps) => void;
   error: string;
 };
-const Login = ({ onSubmit, error }: Props) => {
+const LoginForm = ({ onSubmit, error }: Props) => {
   const { register, handleSubmit } = useForm<LoginProps>({ resolver: yupResolver(loginSchema) });
 
-  const onLogin = (user: LoginProps) => {
-    onSubmit(user);
+  const onLogin = async (user: LoginProps) => {
+    const isValid = await loginSchema.isValid(user);
+
+    if (isValid) {
+      onSubmit(user);
+    }
   };
 
   return (
     <Container width="400px">
       <Title>Login form</Title>
       <form onSubmit={handleSubmit(onLogin)}>
-        <InputField type="text" label="Username" name="username" register={register} required />
+        <InputField type="text" label="Email" name="email" register={register} required />
         <InputField type="password" label="password" name="password" register={register} required />
         {error && <ErrorField>{error}</ErrorField>}
         <AuthRedirect label="Don't have account?" link="register" linkText="Sign up" />
@@ -36,4 +40,4 @@ const Login = ({ onSubmit, error }: Props) => {
   );
 };
 
-export default Login;
+export default LoginForm;

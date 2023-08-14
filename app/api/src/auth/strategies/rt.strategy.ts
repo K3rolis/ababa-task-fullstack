@@ -8,10 +8,23 @@ import { JwtPayload } from '../types';
 export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+        RtStrategy.extractJwt,
+      ]),
       secretOrKey: process.env.RT_TOKEN,
       passReqToCallback: true,
     });
+  }
+
+  private static extractJwt(req: Request): string | null {
+    if (
+      req.cookies &&
+      'user_token' in req.cookies &&
+      req.cookies.user_token.length > 0
+    ) {
+      return req.cookies.user_token;
+    }
   }
 
   validate(req: Request, payload: JwtPayload) {

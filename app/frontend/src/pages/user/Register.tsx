@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import RegisterForm from '../../components/forms/register/RegisterForm';
 import { UserRegisterProps } from '../../props/UserProps';
 import { createUser } from '../../api/user';
@@ -19,17 +19,18 @@ const Register = () => {
   });
 
   const handleNewUser = (user: UserRegisterProps) => {
-    const UserData = {
-      username: user.username,
-      email: user.email,
-      password: user.password,
-    };
+    // const UserData = {
+    //   username: user.username,
+    //   email: user.email,
+    //   password: user.password,
+    // };
 
     setAuth({
       username: user.username,
       isLoggedIn: true,
     });
-    createUserMutation.mutate(UserData);
+
+    createUserMutation.mutate(user);
   };
 
   return <RegisterForm onSubmit={handleNewUser}></RegisterForm>;

@@ -7,46 +7,61 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { MoviesDto } from './dtos/movies.dto';
 import { MoviesService } from './movies.service';
-import { Public } from 'src/auth/common/decorators';
+import { GetCurrentUserId, Public } from 'src/auth/common/decorators';
 import { Movie } from '@prisma/client';
+import { OrderParams, SearchParams } from './types';
 
 @Controller('movies')
 export class MoviesController {
   constructor(private moviesService: MoviesService) {}
 
-  @Public()
   @Post('create')
-  createMovie(@Body() dto: MoviesDto): Promise<Movie> {
-    return this.moviesService.createMovie(dto);
+  createMovie(
+    @Body() dto: MoviesDto,
+    @GetCurrentUserId() userId: number,
+  ): Promise<Movie> {
+    return this.moviesService.createMovie(dto, userId);
   }
 
   @Public()
   @Get()
-  getMovies() {
-    return this.moviesService.getMovies();
+  getMovies(@Query() orderBy: OrderParams) {
+    return this.moviesService.getMovies(orderBy);
   }
 
-  @Public()
   @Get('edit/:id')
-  editMovie(@Param('id', ParseIntPipe) id: number) {
-    return this.moviesService.editMovie(id);
+  editMovie(
+    @Param('id', ParseIntPipe) movieId: number,
+    @GetCurrentUserId() userId: number,
+  ): Promise<Movie> {
+    return this.moviesService.editMovie(movieId, userId);
   }
 
-  @Public()
   @Put('/:id')
   updateMovie(
     @Param('id', ParseIntPipe) movieId: number,
     @Body() dto: MoviesDto,
+    @GetCurrentUserId() userId: number,
   ): Promise<Movie> {
-    return this.moviesService.updateMovie(movieId, dto);
+    console.log(dto);
+    return this.moviesService.updateMovie(movieId, dto, userId);
+  }
+
+  @Delete('/:id')
+  deleteMovie(
+    @Param('id', ParseIntPipe) id: number,
+    @GetCurrentUserId() userId: number,
+  ): Promise<Movie> {
+    return this.moviesService.deleteMovie(id, userId);
   }
 
   @Public()
-  @Delete('/:id')
-  deleteMovie(@Param('id', ParseIntPipe) id: number) {
-    return this.moviesService.deleteMovie(id);
+  @Get('search')
+  searchMovies(@Query() query: SearchParams) {
+    return this.moviesService.searchMovies(query);
   }
 }

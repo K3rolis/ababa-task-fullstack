@@ -12,26 +12,31 @@ import NotFound from './components/errors/NotFound';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GetAccessToken, SetUsername } from './components/JwtTokenData';
+import axios from 'axios';
 
 function App() {
   const { auth } = useContext(LoginContext);
+  SetUsername('user_token');
+
+  axios.defaults.headers.common['Authorization'] = `Bearer ${GetAccessToken()} `;
 
   return (
     <div className="App">
       <Navigation />
       <Routes>
         <Route path="/" element={<MoviesList />} />
-        {!auth.isLoggedIn && (
+        {auth.isLoggedIn && (
           <>
             <Route path="/movies/create" element={<MovieCreate />} />
             <Route path="/movies/edit/:movieId" element={<MovieEdit />} />
           </>
         )}
-        <Route path="/movies/search/:search" element={<Search />} />
+        <Route path="/movies/:search" element={<Search />} />
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/*" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} errorElement={<NotFound />} />
       </Routes>
       <ToastContainer />
     </div>

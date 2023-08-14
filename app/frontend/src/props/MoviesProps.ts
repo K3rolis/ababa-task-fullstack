@@ -5,5 +5,5 @@ export type MovieProps = {
   releasedYear: number;
   description: string;
   imageUrl: string;
-  userId: number;
+  userId?: number;
 };

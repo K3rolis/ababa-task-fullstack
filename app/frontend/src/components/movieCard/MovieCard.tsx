@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styles from './MovieCard.module.css';
 import { MovieProps } from '../../props/MoviesProps';
 import { Link } from 'react-router-dom';
 import { AiFillDelete, AiFillEdit, AiFillStar } from 'react-icons/ai';
 import { LoginContext } from '../../contexts/LoginContext';
+import { GetUserId } from '../JwtTokenData';
 
 type Props = {
   props: MovieProps;
@@ -30,7 +31,7 @@ const MovieCard = ({ handleDelete, props }: Props) => {
           <p className={styles.description}>{props.description}</p>
         </div>
       </div>
-      {!auth.isLoggedIn && (
+      {auth.isLoggedIn && GetUserId() === props.userId && (
         <div className={styles.actions}>
           <Link to={`/movies/edit/${props.id}`} title="Edit">
             <AiFillEdit className={styles.icon} />

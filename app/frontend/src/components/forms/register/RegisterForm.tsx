@@ -1,4 +1,3 @@
-import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import InputField from '../../inputField/InputField';
@@ -22,7 +21,6 @@ const RegisterForm = ({ onSubmit }: Props) => {
   } = useForm({ resolver: yupResolver(registerSchema) });
 
   const onRegister = async (user: UserRegisterProps) => {
-    console.log(user);
     const isValid = await registerSchema.isValid(user);
 
     if (isValid) {

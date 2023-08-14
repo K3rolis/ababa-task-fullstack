@@ -1,4 +1,3 @@
-import React from 'react';
 import InputField from '../../inputField/InputField';
 import Container from '../../container/Container';
 import styles from './MovieForm.module.css';

@@ -1,4 +1,3 @@
-import React from 'react';
 import Container from '../container/Container';
 import { Link } from 'react-router-dom';
 import styles from './NotFound.module.css';

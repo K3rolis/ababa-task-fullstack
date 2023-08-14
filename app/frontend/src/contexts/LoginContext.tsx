@@ -1,7 +1,7 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useState } from 'react';
 
 export type Auth = {
-  username: string;
+  username: string | null;
   isLoggedIn: boolean;
 };
 

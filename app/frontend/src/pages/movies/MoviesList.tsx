@@ -13,19 +13,29 @@ import { Link, useNavigate } from 'react-router-dom';
 import { LoginContext } from '../../contexts/LoginContext';
 import { toast } from 'react-toastify';
 import { FadeLoader } from 'react-spinners';
+import { SetUsername } from '../../components/JwtTokenData';
 
 const MoviesList = () => {
-  const [moviesDesc, setMoviesDesc] = useState<boolean>(false);
+  const [moviesDesc, setMoviesDesc] = useState<null | boolean>(null);
   const { auth } = useContext(LoginContext);
   const navigate = useNavigate();
+  SetUsername('user_token');
+
+  const order = () => {
+    if (moviesDesc === true) {
+      return 'desc';
+    } else if (moviesDesc === false) {
+      return 'asc';
+    } else return;
+  };
 
   const {
     refetch,
     isLoading,
     data: movies,
   } = useQuery({
-    queryKey: ['movies'],
-    queryFn: getMovies,
+    queryKey: ['movies', order()],
+    queryFn: () => getMovies(String(order())),
   });
 
   const deleteMovieMutation = useMutation({
@@ -41,7 +51,7 @@ const MoviesList = () => {
   });
 
   const handleDelete = (id: number) => {
-    if (!auth.isLoggedIn) {
+    if (auth.isLoggedIn) {
       deleteMovieMutation.mutate(id);
     } else {
       navigate('/*');
@@ -50,24 +60,24 @@ const MoviesList = () => {
 
   if (isLoading) return <FadeLoader className="spinner" color="#36d7b7" />;
 
-  console.log(movies);
-
-  // const moviesSorted = movies.toReversed();
-
   return (
     <Container width="800px">
       <Title>Movies</Title>
       <div className={styles.header}>
         <span className={styles.hidden}></span>
 
-        <div className={styles.sortingBox}>
-          <span className={styles.sort}>Sort By Title</span>
-          {moviesDesc ? (
-            <AiOutlineArrowUp className={styles.icon} onClick={() => setMoviesDesc(false)} />
-          ) : (
-            <AiOutlineArrowDown className={styles.icon} onClick={() => setMoviesDesc(true)} />
-          )}
-        </div>
+        {movies.length ? (
+          <div className={styles.sortingBox}>
+            <span className={styles.sort}>Sort By Title</span>
+            {moviesDesc ? (
+              <AiOutlineArrowUp className={styles.icon} onClick={() => setMoviesDesc(false)} />
+            ) : (
+              <AiOutlineArrowDown className={styles.icon} onClick={() => setMoviesDesc(true)} />
+            )}
+          </div>
+        ) : (
+          ''
+        )}
 
         {auth.isLoggedIn && (
           <LinkButton className={`${styles.button} ${classes.outline}`}>

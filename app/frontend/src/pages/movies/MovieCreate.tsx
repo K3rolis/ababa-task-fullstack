@@ -4,6 +4,7 @@ import { createMovie } from '../../api/movies';
 import { MovieProps } from '../../props/MoviesProps';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { GetUserId } from '../../components/JwtTokenData';
 
 const MovieCreate = () => {
   const navigate = useNavigate();
@@ -19,12 +20,9 @@ const MovieCreate = () => {
     },
   });
   const handleSubmit = (movie: MovieProps) => {
-    console.log(movie);
-    movie.userId = 1;
-    createMovieMutation.mutate({
-      ...movie,
-    });
-    console.log(movie);
+    movie.userId = GetUserId();
+
+    createMovieMutation.mutate({ ...movie });
   };
   return <MovieForm onSubmit={handleSubmit} initialValues={{} as MovieProps}></MovieForm>;
 };
